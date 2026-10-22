@@ -19,6 +19,8 @@ public sealed class BassAudioEngine : IAudioEngine
     private readonly Timer _monitor;
 
     private bool _fxAvailable;
+    private string _fxLoadError = string.Empty;
+    private string _equalizerDiagnostics = "not-applied";
     private int _stream;
     private int _eqFx;
     private int _generation;
@@ -54,6 +56,7 @@ public sealed class BassAudioEngine : IAudioEngine
                                            or BadImageFormatException)
         {
             _fxAvailable = false;
+            _fxLoadError = $"{exception.GetType().Name}: {exception.Message}";
         }
 
         _metaSync = (handle, _, _, _) => EmitMetadata(handle);
@@ -67,6 +70,9 @@ public sealed class BassAudioEngine : IAudioEngine
 
     /// <summary>True when BASS_FX loaded and a peaking EQ is attached (diagnostics).</summary>
     public bool EqualizerAttached => _fxAvailable && _eqFx != 0 && CurrentStream() != 0;
+
+    /// <summary>Human-readable equalizer state for tools and the diagnostics panel.</summary>
+    public string EqualizerDiagnostics => _equalizerDiagnostics;
 
     public event Action<PlaybackState>? StateChanged;
 
@@ -182,6 +188,7 @@ public sealed class BassAudioEngine : IAudioEngine
     {
         _eqEnabled = enabled;
         _gains = EqualizerCatalog.ClampGains(gains);
+        _equalizerDiagnostics = enabled ? "pending" : "disabled";
 
         var stream = CurrentStream();
         if (stream != 0)
@@ -318,6 +325,7 @@ public sealed class BassAudioEngine : IAudioEngine
     {
         if (!_fxAvailable || stream == 0)
         {
+            _equalizerDiagnostics = _fxAvailable ? "no-stream" : $"fx-unavailable: {_fxLoadError}";
             return;
         }
 
@@ -331,6 +339,7 @@ public sealed class BassAudioEngine : IAudioEngine
                     _eqFx = 0;
                 }
 
+                _equalizerDiagnostics = "disabled";
                 return;
             }
 
@@ -340,6 +349,8 @@ public sealed class BassAudioEngine : IAudioEngine
                 fx = BassNative.ChannelSetFx(stream, BassNative.BfxPeakEq, 0);
                 if (fx == 0)
                 {
+                    _equalizerDiagnostics =
+                        $"fx-set-failed: {BassNative.ErrorName(BassNative.ErrorGetCode())}";
                     return;
                 }
 
@@ -363,11 +374,15 @@ public sealed class BassAudioEngine : IAudioEngine
                 };
                 BassNative.FxSetParameters(fx, ref parameters);
             }
+
+            _equalizerDiagnostics = "attached";
         }
         catch (Exception exception) when (exception is DllNotFoundException or EntryPointNotFoundException
                                            or BadImageFormatException)
         {
             _fxAvailable = false;
+            _fxLoadError = $"{exception.GetType().Name}: {exception.Message}";
+            _equalizerDiagnostics = $"fx-unavailable: {_fxLoadError}";
         }
     }
 

@@ -33,6 +33,14 @@ engine.StateChanged += state =>
 engine.MetadataChanged += title => Console.WriteLine($"[meta] {title}");
 
 Console.WriteLine($"engine: {engine.Name} (no sound: {noSound})");
+var nativeNames = OperatingSystem.IsWindows()
+    ? new[] { "bass.dll", "bass_fx.dll", "bass_aac.dll", "basshls.dll" }
+    : new[] { "libbass.dylib", "libbass_fx.dylib", "libbasshls.dylib" };
+foreach (var native in nativeNames)
+{
+    var path = Path.Combine(AppContext.BaseDirectory, native);
+    Console.WriteLine($"[native] {native}: {(File.Exists(path) ? new FileInfo(path).Length + " bytes" : "missing")}");
+}
 engine.SetVolume(0.6);
 engine.Play(new Uri(url), 0.6);
 
@@ -42,7 +50,7 @@ if (useEq)
     engine.SetEqualizer(true, EqualizerCatalog.ById("bass").Gains);
     await Task.Delay(300);
     eqAttached = engine.EqualizerAttached;
-    Console.WriteLine($"[eq] bass preset attached={eqAttached}");
+    Console.WriteLine($"[eq] bass preset attached={eqAttached} ({engine.EqualizerDiagnostics})");
 }
 
 var deadline = DateTime.UtcNow.AddSeconds(seconds);
