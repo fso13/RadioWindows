@@ -21,6 +21,10 @@ try {
         $Version = $props.Project.PropertyGroup.Version
     }
 
+    # PE metadata only accepts four numeric fields; preview tags keep their suffix
+    # in the product version but not in the assembly/file version.
+    $numericVersion = ($Version -split '-')[0]
+
     $publish = Join-Path $root "publish"
     $dist = Join-Path $root "dist"
     Remove-Item $publish -Recurse -Force -ErrorAction SilentlyContinue
@@ -28,7 +32,7 @@ try {
 
     dotnet publish "src/RadioWindows/RadioWindows.csproj" `
         -c Release -r win-x64 --self-contained true `
-        -p:Version=$Version -p:FileVersion="$Version.0" -p:AssemblyVersion="$Version.0" `
+        -p:Version=$Version -p:FileVersion="$numericVersion.0" -p:AssemblyVersion="$numericVersion.0" `
         -p:LastFmApiKey="$LastFmApiKey" -p:LastFmApiSecret="$LastFmApiSecret" `
         -p:PublishSingleFile=false -p:PublishTrimmed=false -p:PublishReadyToRun=true `
         -o $publish
@@ -54,9 +58,8 @@ try {
 
         if ($null -ne $iscc) {
             $env:RADIO_VERSION = $Version
-            $numeric = ($Version -split '-')[0]
             $exe = if ($iscc -is [string]) { $iscc } else { $iscc.Source }
-            & $exe "/DMyAppVersion=$Version" "/DMyAppVersionInfo=$numeric" "installer/RadioWindows.iss"
+            & $exe "/DMyAppVersion=$Version" "/DMyAppVersionInfo=$numericVersion" "installer/RadioWindows.iss"
             if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
         }
         else {
