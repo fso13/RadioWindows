@@ -40,6 +40,8 @@ jobs:
   package:
     name: Windows package
     needs: build
+    # Dependabot updates to workflow actions do not touch the app; skip the heavy job.
+    if: github.actor != 'dependabot[bot]'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4

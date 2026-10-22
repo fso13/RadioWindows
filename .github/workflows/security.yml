@@ -28,8 +28,15 @@ jobs:
           ! grep -qi "has the following vulnerable" packages.txt
 
   dependency-review:
-    if: github.event_name == 'pull_request'
+    # Dependabot PRs run with a read-only token and a synthetic dependency graph,
+    # which the review action cannot diff; the vulnerability scan above still runs.
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
