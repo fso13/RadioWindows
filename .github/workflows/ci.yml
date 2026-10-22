@@ -66,10 +66,11 @@ jobs:
           dotnet run --project tools/AudioProbe/AudioProbe.csproj -c Release -- "https://stream.radioparadise.com/rock-128" 8 --nosound
           if ($LASTEXITCODE -ne 0) { throw "ICY metadata probe failed" }
 
-      - name: BASS HLS probe (informational)
-        continue-on-error: true
+      - name: BASS HLS smoke test
         shell: pwsh
-        run: dotnet run --project tools/AudioProbe/AudioProbe.csproj -c Release -- "https://h.getradio.me/spdeep/hls.m3u8" 8 --nosound
+        run: |
+          dotnet run --project tools/AudioProbe/AudioProbe.csproj -c Release -- "https://h.getradio.me/spdeep/hls.m3u8" 8 --nosound
+          if ($LASTEXITCODE -ne 0) { throw "HLS playback failed" }
 
       - name: Publish
         shell: pwsh

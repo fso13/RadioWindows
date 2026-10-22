@@ -266,6 +266,13 @@ headless-тестов Avalonia (рендер, поиск, фильтры, вос
 и материал для README. UI-тесты складывают PNG в `tests/RadioWindows.UiTests/bin/.../screenshots`
 и запускаются в CI на Windows.
 
+`tools/AudioProbe` проверяет сам движок без звуковой карты (`--nosound`): поток, ICY-метаданные
+и эквалайзер. В CI на Windows прогоняются MP3 + BASS_FX, AAC/AAC+, ICY и HLS:
+
+```powershell
+dotnet run --project tools/AudioProbe -- "https://ice1.somafm.com/groovesalad-128-mp3" 10 eq --nosound
+```
+
 ## Отличия от macOS-версии
 
 - **Аудиодвижок**: BASS 2.4 вместо AVFoundation; HLS, AAC/AAC+, Opus, FLAC и ICY,
@@ -289,8 +296,8 @@ headless-тестов Avalonia (рендер, поиск, фильтры, вос
 - BASS и add-on'ы — внешние нативные библиотеки (см. `src/RadioWindows/Native/licenses`).
   BASS бесплатен для некоммерческого использования; для коммерческого нужна лицензия
   [un4seen](https://www.un4seen.com/). `bass_aac` распространяется по GPLv2 (FAAD2).
-- HLS воспроизводится через `basshls`; если сервер отдаёт несовместимый TLS/плейлист,
-  станция покажет ошибку и предложит «Повторить».
+- HLS воспроизводится через `basshls` (MPEG-TS и fMP4). Если сервер отдаёт несовместимый
+  плейлист, станция покажет ошибку и предложит «Повторить».
 - Нет синхронизации между компьютерами и облачных аккаунтов: все данные локальные.
 - Будильник работает, пока приложение запущено; после сна Windows возможна задержка
   до нескольких минут.

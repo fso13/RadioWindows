@@ -17,7 +17,7 @@
 
 - `tools/AudioProbe` — smoke-тест движка (поток, метаданные, эквалайзер, `--nosound`
   для CI без звуковой карты).
-- CI на Windows прогоняет AudioProbe для MP3 и AAC перед сборкой установщика.
+- CI на Windows прогоняет AudioProbe для MP3, AAC и HLS перед сборкой установщика.
 - Папка `Native/licenses` с текстами лицензий BASS и add-on'ов (копируется в установку).
 
 ### Лицензии
