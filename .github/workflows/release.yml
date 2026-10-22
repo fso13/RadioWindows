@@ -52,7 +52,7 @@ jobs:
         run: ./scripts/release_notes.ps1 -Version ${{ steps.version.outputs.value }} -OutFile release-notes.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', steps.version.outputs.value) }}
           name: RadioWindows ${{ steps.version.outputs.value }}
