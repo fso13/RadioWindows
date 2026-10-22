@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:RadioWindows.Views"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.ShellView"
+             x:DataType="vm:ShellViewModel">
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="{x:Type vm:MainPageViewModel}">
+      <views:MainPage />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SettingsPageViewModel}">
+      <views:SettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ConfirmDialogViewModel}">
+      <views:ConfirmDialogView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:EqualizerViewModel}">
+      <views:EqualizerView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:StationEditorViewModel}">
+      <views:StationEditorView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BrowserViewModel}">
+      <views:BrowserView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TransferViewModel}">
+      <views:TransferView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HistoryViewModel}">
+      <views:HistoryView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DiagnosticsViewModel}">
+      <views:DiagnosticsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:LastFmSetupViewModel}">
+      <views:LastFmSetupView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:HelpViewModel}">
+      <views:HelpView />
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <Grid Background="Transparent">
+    <Border Margin="10"
+            CornerRadius="12"
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource SeparatorBrush}"
+            BorderThickness="1"
+            BoxShadow="0 12 30 0 #26000000">
+      <ContentControl Content="{Binding Page}" />
+    </Border>
+
+    <Border Margin="10"
+            CornerRadius="12"
+            Background="{DynamicResource DimBrush}"
+            IsVisible="{Binding HasModal}">
+      <ContentControl Content="{Binding Modal}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
+    </Border>
+
+    <Border IsVisible="{Binding Toasts.IsVisible}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Margin="0,0,0,92"
+            Padding="12,8"
+            CornerRadius="2"
+            Background="{DynamicResource AccentFillBrush}">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <ContentControl Content="{Binding Toasts.Kind}" IsVisible="False" />
+        <TextBlock Text="{Binding Toasts.Message}"
+                   Classes="captionMedium"
+                   Foreground="{DynamicResource OnAccentBrush}" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

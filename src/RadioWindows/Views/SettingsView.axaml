@@ -1,0 +1,442 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:views="using:RadioWindows.Views"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.SettingsView"
+             x:DataType="vm:SettingsPageViewModel">
+  <UserControl.Styles>
+    <Style Selector="TextBlock.sectionTitle">
+      <Setter Property="FontSize" Value="{StaticResource Font.Section}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="0,26,0,6" />
+    </Style>
+    <Style Selector="Grid.settingsRow">
+      <Setter Property="MinHeight" Value="52" />
+      <Setter Property="Margin" Value="0,2" />
+    </Style>
+    <Style Selector="TextBlock.rowTitle">
+      <Setter Property="FontSize" Value="{StaticResource Font.Body}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+    <Style Selector="TextBlock.rowSubtitle">
+      <Setter Property="FontSize" Value="{StaticResource Font.Caption}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="46,*">
+    <Grid Grid.Row="0" Name="SettingsHeader" ColumnDefinitions="Auto,*,Auto" Background="Transparent">
+      <Button Grid.Column="0" Classes="ghost" Margin="14,0,0,0"
+              Command="{Binding BackCommand}" ToolTip.Tip="{loc:Tr Common.Back}">
+        <controls:Icon Kind="ArrowLeft" Size="12" />
+      </Button>
+      <Button Grid.Column="2" Classes="ghost" Margin="0,0,12,0"
+              Command="{Binding CloseCommand}" ToolTip.Tip="{loc:Tr Header.Hide}">
+        <controls:Icon Kind="Close" Size="11" />
+      </Button>
+      <Border Grid.ColumnSpan="3" Classes="rule" />
+    </Grid>
+
+    <Grid Grid.Row="1">
+      <ScrollViewer Name="SettingsScroll" VerticalScrollBarVisibility="Auto"
+                    IsVisible="{Binding IsSettingsContentVisible}">
+        <StackPanel Margin="24,4,24,32" Spacing="0">
+          <TextBlock Text="{Binding Title}" Classes="pageTitle" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption" Margin="0,4,0,0" />
+
+          <!-- Appearance -->
+          <TextBlock Text="{loc:Tr Settings.Appearance}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <ItemsControl ItemsSource="{Binding ThemeOptions}" Margin="0,14,0,0" Focusable="False">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="24" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ThemeOptionViewModel">
+                <Button Classes="textButton" Command="{Binding Command}" Padding="0">
+                  <StackPanel Spacing="5">
+                    <TextBlock Text="{Binding Label}" Classes="caption"
+                               Classes.ink="{Binding IsSelected}" />
+                    <Border Height="1" Width="64" HorizontalAlignment="Left"
+                            Background="{DynamicResource TextPrimaryBrush}"
+                            IsVisible="{Binding IsSelected}" />
+                  </StackPanel>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Text="{Binding ThemeDetail}" Classes="rowSubtitle" Margin="0,10,0,4" />
+
+          <!-- Sleep timer -->
+          <TextBlock Text="{loc:Tr Settings.Sleep}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{Binding SleepRowTitle}" Classes="rowTitle" />
+              <TextBlock Text="{loc:Tr Settings.SleepSubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10"
+                        VerticalAlignment="Center">
+              <Button Classes="textButton" Command="{Binding SleepStartCommand}" CommandParameter="15">
+                <TextBlock Text="15" Classes="mono" />
+              </Button>
+              <Button Classes="textButton" Command="{Binding SleepStartCommand}" CommandParameter="30">
+                <TextBlock Text="30" Classes="mono" />
+              </Button>
+              <Button Classes="textButton" Command="{Binding SleepStartCommand}" CommandParameter="60">
+                <TextBlock Text="60" Classes="mono" />
+              </Button>
+              <Button Classes="textButton" Command="{Binding SleepStartCommand}" CommandParameter="90">
+                <TextBlock Text="90" Classes="mono" />
+              </Button>
+              <Button Classes="textButton" Command="{Binding SleepCancelCommand}"
+                      IsVisible="{Binding SleepActive}" ToolTip.Tip="{loc:Tr Player.SleepCancel}">
+                <controls:Icon Kind="Close" Size="9" />
+              </Button>
+            </StackPanel>
+          </Grid>
+
+          <!-- History -->
+          <TextBlock Text="{loc:Tr Settings.History}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{Binding HistoryCountText}" Classes="rowTitle" />
+              <TextBlock Text="{loc:Tr Settings.HistorySubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="textButton" Command="{Binding OpenHistoryCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Clock" Size="10" />
+                <TextBlock Text="{loc:Tr Settings.HistoryOpen}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+          </Grid>
+
+          <!-- Hot keys -->
+          <TextBlock Text="{loc:Tr Settings.Hotkeys}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+            <TextBlock Text="{loc:Tr Settings.HotkeyPlayPause}" Classes="rowTitle"
+                       VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" Width="88" ItemsSource="{Binding HotKeyKeys}"
+                      SelectedItem="{Binding SelectedPlayPauseKey, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:HotKeyKeyOption">
+                  <TextBlock Text="{Binding Label}" Classes="callout" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox Grid.Column="2" Width="124" ItemsSource="{Binding HotKeyModifiersList}"
+                      SelectedItem="{Binding SelectedPlayPauseModifiers, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:HotKeyModifierOption">
+                  <TextBlock Text="{Binding Label}" Classes="callout" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+            <TextBlock Text="{loc:Tr Settings.HotkeyNext}" Classes="rowTitle"
+                       VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" Width="88" ItemsSource="{Binding HotKeyKeys}"
+                      SelectedItem="{Binding SelectedNextKey, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:HotKeyKeyOption">
+                  <TextBlock Text="{Binding Label}" Classes="callout" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox Grid.Column="2" Width="124" ItemsSource="{Binding HotKeyModifiersList}"
+                      SelectedItem="{Binding SelectedNextModifiers, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:HotKeyModifierOption">
+                  <TextBlock Text="{Binding Label}" Classes="callout" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+          <TextBlock Text="{Binding HotKeyError}" Classes="caption"
+                     Foreground="{DynamicResource RedBrush}" IsVisible="{Binding HasHotKeyError}"
+                     Margin="0,4,0,0" TextWrapping="Wrap" />
+
+          <!-- Behaviour -->
+          <TextBlock Text="{loc:Tr Settings.Behavior}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Settings.Resume}" Classes="rowTitle" />
+              <TextBlock Text="{loc:Tr Settings.ResumeSubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <controls:ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                   IsChecked="{Binding ResumeLastStation, Mode=TwoWay}" />
+          </Grid>
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Settings.Autostart}" Classes="rowTitle" />
+              <TextBlock Text="{Binding AutostartSubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <controls:ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                   IsEnabled="{Binding AutostartSupported}"
+                                   IsChecked="{Binding IsAutostartOn, Mode=TwoWay}" />
+          </Grid>
+
+          <!-- Alarm -->
+          <TextBlock Text="{loc:Tr Settings.Alarm}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Settings.AlarmEnabled}" Classes="rowTitle" />
+              <TextBlock Text="{Binding AlarmSubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <controls:ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                   IsChecked="{Binding AlarmEnabled, Mode=TwoWay}" />
+          </Grid>
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="Auto,Auto,Auto,*" ColumnSpacing="6"
+                IsEnabled="{Binding AlarmEnabled}">
+            <TextBlock Text="{Binding AlarmTimeLabel}" Classes="rowTitle"
+                       Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" Width="64" ItemsSource="{Binding Hours}"
+                      SelectedItem="{Binding SelectedHour, Mode=TwoWay}" />
+            <TextBlock Grid.Column="2" Text=":" Classes="body" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="3" Width="64" HorizontalAlignment="Left"
+                      ItemsSource="{Binding Minutes}"
+                      SelectedItem="{Binding SelectedMinute, Mode=TwoWay}" />
+          </Grid>
+          <Border Classes="rule" />
+          <StackPanel Margin="0,12,0,8" IsEnabled="{Binding AlarmEnabled}">
+            <TextBlock Text="{Binding AlarmDaysLabel}" Classes="fieldLabel" />
+            <ItemsControl ItemsSource="{Binding Weekdays}" Focusable="False">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="14" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:AlarmWeekdayViewModel">
+                  <Button Classes="textButton" Command="{Binding Command}" Padding="0"
+                          ToolTip.Tip="{Binding FullLabel}">
+                    <StackPanel Spacing="4">
+                      <TextBlock Text="{Binding Label}" Classes="captionMedium"
+                                 Classes.ink="{Binding IsSelected}" />
+                      <Border Height="1" Width="22"
+                              Background="{DynamicResource TextPrimaryBrush}"
+                              IsVisible="{Binding IsSelected}" />
+                    </StackPanel>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="Auto,*" IsEnabled="{Binding AlarmEnabled}">
+            <TextBlock Text="{Binding AlarmStationLabel}" Classes="rowTitle"
+                       Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" HorizontalAlignment="Right" Width="230"
+                      ItemsSource="{Binding AlarmStations}"
+                      SelectedItem="{Binding SelectedAlarmStation, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:AlarmStationOption">
+                  <TextBlock Text="{Binding Name}" Classes="callout" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="Auto,*">
+            <TextBlock Text="{Binding AlarmNextLabel}" Classes="rowTitle"
+                       Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding AlarmNextText}" Classes="mono"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+          </Grid>
+          <TextBlock Text="{Binding AlarmNote}" Classes="rowSubtitle" Margin="0,8,0,0" />
+
+          <!-- Sound -->
+          <TextBlock Text="{loc:Tr Settings.Sound}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Player.Equalizer}" Classes="rowTitle" />
+              <TextBlock Text="{Binding EqualizerSubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="textButton" Command="{Binding OpenEqualizerCommand}">
+              <TextBlock Text="{loc:Tr Settings.OpenEqualizer}" Classes="captionMedium" />
+            </Button>
+          </Grid>
+
+          <!-- Stream -->
+          <TextBlock Text="{loc:Tr Settings.Stream}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <ItemsControl ItemsSource="{Binding StreamRows}" Focusable="False">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:InfoRowViewModel">
+                <Grid ColumnDefinitions="Auto,*" Margin="0,10">
+                  <TextBlock Text="{Binding Label}" Classes="body"
+                             Foreground="{DynamicResource TextSecondaryBrush}" />
+                  <TextBlock Grid.Column="1" Text="{Binding Value}" Classes="mono"
+                             HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,10,0,4">
+            <Button Classes="textButton" Command="{Binding RefreshStreamCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Refresh" Size="10" />
+                <TextBlock Text="{loc:Tr Settings.StreamRefresh}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+            <Button Classes="textButton" Command="{Binding CopyDiagnosticsCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Copy" Size="10" />
+                <TextBlock Text="{loc:Tr Settings.CopyDiagnostics}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+
+          <!-- Last.fm -->
+          <TextBlock Text="{loc:Tr Settings.LastFm}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Settings.LastFmEnable}" Classes="rowTitle" />
+              <TextBlock Text="{Binding LastFmStatus}" Classes="rowSubtitle" />
+            </StackPanel>
+            <controls:ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                   IsChecked="{Binding IsLastFmEnabled, Mode=TwoWay}" />
+          </Grid>
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <TextBlock Text="{loc:Tr Settings.LastFmConnection}" Classes="rowTitle"
+                       Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Classes="textButton" Command="{Binding OpenLastFmCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Person" Size="10" />
+                <TextBlock Text="{loc:Tr Settings.LastFmConnect}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+          </Grid>
+          <TextBlock Text="{Binding LastFmNote}" Classes="rowSubtitle" Margin="0,8,0,0" />
+
+          <!-- Updates -->
+          <TextBlock Text="{loc:Tr Settings.Updates}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{Binding UpdatesTitle}" Classes="rowTitle" />
+              <TextBlock Text="{Binding UpdateStatus}" Classes="rowSubtitle"
+                         IsVisible="{Binding !UpdateAvailable}" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="textButton" Command="{Binding OpenUpdateCommand}"
+                    IsVisible="{Binding UpdateAvailable}">
+              <TextBlock Text="{loc:Tr Updates.Open}" Classes="captionMedium" />
+            </Button>
+            <Button Grid.Column="2" Classes="textButton" Command="{Binding CheckUpdatesCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Refresh" Size="10" />
+                <TextBlock Text="{loc:Tr Settings.CheckUpdates}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+          </Grid>
+
+          <!-- Diagnostics -->
+          <TextBlock Text="{loc:Tr Settings.Diagnostics}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Settings.DiagnosticsToggle}" Classes="rowTitle" />
+              <TextBlock Text="{Binding DiagnosticsSubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <controls:ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                   IsChecked="{Binding IsDiagnosticsEnabled, Mode=TwoWay}" />
+          </Grid>
+          <Border Classes="rule" />
+          <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,10,0,4">
+            <Button Classes="textButton" Command="{Binding OpenDiagnosticsCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Doc" Size="10" />
+                <TextBlock Text="{loc:Tr Settings.DiagnosticsOpen}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+            <Button Classes="textButton" Command="{Binding RevealDiagnosticsCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Folder" Size="10" />
+                <TextBlock Text="{loc:Tr Settings.DiagnosticsReveal}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+          <TextBlock Text="{Binding CrashText}" Classes="caption"
+                     Foreground="{DynamicResource RedBrush}" IsVisible="{Binding HasCrash}"
+                     TextWrapping="Wrap" Margin="0,0,0,6" />
+          <TextBlock Text="{loc:Tr Settings.DiagnosticsNote}" Classes="rowSubtitle" />
+
+          <!-- Library -->
+          <TextBlock Text="{loc:Tr Settings.Library}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Settings.LibraryCatalog}" Classes="rowTitle" />
+              <TextBlock Text="{Binding LibraryCountText}" Classes="rowSubtitle" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="textButton" Command="{Binding RestoreLibraryCommand}">
+              <TextBlock Text="{loc:Tr Common.Reset}" Classes="captionMedium" />
+            </Button>
+          </Grid>
+
+          <!-- Help -->
+          <TextBlock Text="{loc:Tr Settings.Help}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+              <TextBlock Text="{loc:Tr Settings.Documentation}" Classes="rowTitle" />
+              <TextBlock Text="{loc:Tr Settings.HelpSubtitle}" Classes="rowSubtitle" />
+            </StackPanel>
+            <Button Grid.Column="1" Classes="textButton" Command="{Binding OpenHelpCommand}">
+              <TextBlock Text="{loc:Tr Common.Open}" Classes="captionMedium" />
+            </Button>
+          </Grid>
+
+          <!-- About -->
+          <TextBlock Text="{loc:Tr Settings.About}" Classes="sectionTitle" />
+          <Border Classes="rule" />
+          <Grid ColumnDefinitions="Auto,*" Margin="0,10">
+            <TextBlock Text="{loc:Tr Settings.Version}" Classes="body"
+                       Foreground="{DynamicResource TextSecondaryBrush}" />
+            <TextBlock Grid.Column="1" Text="{Binding VersionText}" Classes="mono"
+                       HorizontalAlignment="Right" />
+          </Grid>
+          <Border Classes="rule" />
+          <Grid ColumnDefinitions="Auto,*" Margin="0,10">
+            <TextBlock Text="{loc:Tr Settings.Build}" Classes="body"
+                       Foreground="{DynamicResource TextSecondaryBrush}" />
+            <TextBlock Grid.Column="1" Text="{Binding BuildText}" Classes="mono"
+                       HorizontalAlignment="Right" />
+          </Grid>
+          <Border Classes="rule" />
+          <Grid ColumnDefinitions="Auto,*" Margin="0,10">
+            <TextBlock Text="{loc:Tr Settings.StationCount}" Classes="body"
+                       Foreground="{DynamicResource TextSecondaryBrush}" />
+            <TextBlock Grid.Column="1" Text="{Binding StationCountText}" Classes="mono"
+                       HorizontalAlignment="Right" />
+          </Grid>
+          <TextBlock Text="{Binding AboutLine}" Classes="rowSubtitle" Margin="0,12,0,20" />
+
+          <Button Classes="destructive" Command="{Binding QuitCommand}"
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+            <TextBlock Text="{loc:Tr Settings.Quit}" Classes="captionMedium"
+                       Foreground="{DynamicResource RedBrush}" />
+          </Button>
+        </StackPanel>
+      </ScrollViewer>
+
+      <ContentControl Content="{Binding Help}" IsVisible="{Binding IsHelpVisible}" />
+    </Grid>
+  </Grid>
+</UserControl>

@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.BrowserView"
+             x:DataType="vm:BrowserViewModel">
+  <Border Classes="modalCard" Width="620">
+    <StackPanel Spacing="14">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding Title}" Classes="pageTitle" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="ghost" Command="{Binding CloseCommand}">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </Grid>
+
+      <Border Classes="rule" />
+
+      <StackPanel Spacing="10">
+        <Border Classes="field" Height="32">
+          <TextBox Text="{Binding Query, Mode=TwoWay}"
+                   Watermark="{Binding QueryLabel}" />
+        </Border>
+        <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+          <ComboBox Grid.Column="0" ItemsSource="{Binding Genres}"
+                    SelectedItem="{Binding SelectedGenre, Mode=TwoWay}"
+                    HorizontalAlignment="Stretch">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilterOption">
+                <TextBlock Text="{Binding Label}" Classes="callout" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <ComboBox Grid.Column="1" ItemsSource="{Binding Countries}"
+                    SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
+                    HorizontalAlignment="Stretch">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilterOption">
+                <TextBlock Text="{Binding Label}" Classes="callout" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button Grid.Column="2" Classes="primary" Content="{Binding SearchLabel}"
+                  Command="{Binding SearchCommand}" />
+        </Grid>
+      </StackPanel>
+
+      <Border Classes="rule" />
+
+      <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Results}" Focusable="False">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:BrowserItemViewModel">
+              <Border Padding="0,6">
+                <Grid ColumnDefinitions="40,*,Auto,32" ColumnSpacing="10" Height="40">
+                  <Border Width="36" Height="36" ClipToBounds="True"
+                          BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1"
+                          Background="{DynamicResource SurfaceRaisedBrush}">
+                    <controls:RemoteImage SourceUrl="{Binding LogoUrl}" PlaceholderSize="18" />
+                  </Border>
+                  <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{Binding Name}" Classes="headline" />
+                    <TextBlock Text="{Binding Details}" Classes="caption" />
+                  </StackPanel>
+                  <Button Grid.Column="2" Classes="ghost" Command="{Binding PreviewCommand}"
+                          ToolTip.Tip="{loc:Tr Browser.Preview}">
+                    <controls:Icon Kind="Play" Size="10" />
+                  </Button>
+                  <Button Grid.Column="3" Classes="ghost" Command="{Binding AddCommand}"
+                          ToolTip.Tip="{loc:Tr Browser.Add}">
+                    <TextBlock Text="{Binding AddLabel}" Classes="body" />
+                  </Button>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <StackPanel IsVisible="{Binding IsEmpty}" Spacing="6">
+        <TextBlock Text="{Binding Status}" Classes="callout"
+                   Foreground="{DynamicResource TextSecondaryBrush}" />
+      </StackPanel>
+
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Text="{Binding Status}" Classes="caption" IsVisible="{Binding !IsEmpty}" />
+        <Button Grid.Column="1" Classes="secondary" Content="{loc:Tr Common.Close}"
+                Command="{Binding CloseCommand}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

@@ -1,0 +1,5 @@
+<Project>
+  <!-- Avalonia's build-time telemetry task writes into the user profile; the
+       app is offline-first and telemetry is not wanted in release builds. -->
+  <Target Name="AvaloniaStats" />
+</Project>

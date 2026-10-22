@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.ConfirmDialogView"
+             x:DataType="vm:ConfirmDialogViewModel">
+  <Border Classes="modalCard" Width="380">
+    <StackPanel Spacing="14">
+      <TextBlock Text="{Binding Title}" Classes="section" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding Message}" Classes="callout wrap"
+                 Foreground="{DynamicResource TextSecondaryBrush}" />
+      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right" Margin="0,6,0,0">
+        <Button Classes="secondary" Content="{Binding CancelLabel}"
+                Command="{Binding CancelCommand}" />
+        <Button Classes="primary" Content="{Binding ConfirmLabel}"
+                Command="{Binding ConfirmCommand}" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

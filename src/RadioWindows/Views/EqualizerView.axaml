@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.EqualizerView"
+             x:DataType="vm:EqualizerViewModel">
+  <UserControl.Styles>
+    <Style Selector="Button.preset">
+      <Setter Property="Height" Value="22" />
+      <Setter Property="Padding" Value="6,0" />
+      <Setter Property="CornerRadius" Value="2" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.preset:pointerover">
+      <Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+    </Style>
+    <Style Selector="Button.preset.selected">
+      <Setter Property="Background" Value="{DynamicResource SurfaceActiveBrush}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Border Classes="modalCard" Width="580">
+    <StackPanel Spacing="0">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding Title}" Classes="pageTitle" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="ghost" Command="{Binding CloseCommand}"
+                ToolTip.Tip="{loc:Tr Common.Close}" VerticalAlignment="Top">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </Grid>
+
+      <Grid ColumnDefinitions="Auto,*" Margin="0,20,0,0">
+        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <controls:ToggleSwitch IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                 VerticalAlignment="Center" />
+          <TextBlock Text="{Binding EnableLabel}" Classes="body" VerticalAlignment="Center" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="textButton" HorizontalAlignment="Right"
+                Command="{Binding ResetCommand}" VerticalAlignment="Center">
+          <TextBlock Text="{Binding ResetLabel}" Classes="captionMedium" />
+        </Button>
+      </Grid>
+
+      <Border Classes="rule" Margin="0,14,0,0" />
+
+      <TextBlock Text="{Binding PresetLabel}" Classes="fieldLabel" Margin="0,14,0,0" />
+      <ItemsControl ItemsSource="{Binding Presets}" Focusable="False">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:EqPresetItemViewModel">
+            <Button Classes="preset" Classes.selected="{Binding IsSelected}"
+                    Command="{Binding Command}">
+              <TextBlock Text="{Binding Label}" Classes="captionMedium"
+                         Classes.ink="{Binding IsSelected}" />
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <Border Classes="rule" Margin="0,14,0,0" />
+
+      <ItemsControl ItemsSource="{Binding Bands}" Margin="0,18,0,0" Focusable="False"
+                    HorizontalAlignment="Center">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="14" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:EqBandViewModel">
+            <StackPanel Width="34" Spacing="8">
+              <TextBlock Text="{Binding ValueText}" Classes="monoSmall"
+                         HorizontalAlignment="Center" />
+              <controls:Fader Height="150" Width="34" Minimum="-12" Maximum="12"
+                              ThumbSize="9"
+                              Value="{Binding Value, Mode=TwoWay}"
+                              TrackBrush="{DynamicResource SeparatorStrongBrush}"
+                              FillBrush="{DynamicResource TextSecondaryBrush}"
+                              ThumbBrush="{DynamicResource TextPrimaryBrush}" />
+              <TextBlock Text="{Binding Label}" Classes="caption"
+                         HorizontalAlignment="Center" />
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <Grid ColumnDefinitions="*,Auto" Margin="0,18,0,0">
+        <TextBlock Text="{Binding GainLabel}" Classes="caption" VerticalAlignment="Center" />
+        <Button Grid.Column="1" Classes="primary" Content="{loc:Tr Common.Done}"
+                Command="{Binding CloseCommand}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

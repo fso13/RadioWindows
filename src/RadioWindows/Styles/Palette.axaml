@@ -1,0 +1,45 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="WindowBrush" Color="#FFF2F2F2" />
+      <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="#FFFAFAFA" />
+      <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#FFF6F6F6" />
+      <SolidColorBrush x:Key="SurfaceActiveBrush" Color="#FFEDEDED" />
+      <SolidColorBrush x:Key="SeparatorBrush" Color="#FFE8E8E8" />
+      <SolidColorBrush x:Key="SeparatorStrongBrush" Color="#FFD9D9D9" />
+      <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FF111111" />
+      <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FF6B6B6B" />
+      <SolidColorBrush x:Key="TextTertiaryBrush" Color="#FFA6A6A6" />
+      <SolidColorBrush x:Key="AccentBrush" Color="#FF111111" />
+      <SolidColorBrush x:Key="AccentFillBrush" Color="#FF111111" />
+      <SolidColorBrush x:Key="AccentSoftBrush" Color="#FFF1F1F1" />
+      <SolidColorBrush x:Key="OnAccentBrush" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="RedBrush" Color="#FFD64545" />
+      <SolidColorBrush x:Key="GreenBrush" Color="#FF2E7D32" />
+      <SolidColorBrush x:Key="DimBrush" Color="#57111111" />
+      <SolidColorBrush x:Key="ThumbBrush" Color="#FFFFFFFF" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="WindowBrush" Color="#FF000000" />
+      <SolidColorBrush x:Key="SurfaceBrush" Color="#FF0D0D0E" />
+      <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="#FF141416" />
+      <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#FF1A1A1D" />
+      <SolidColorBrush x:Key="SurfaceActiveBrush" Color="#FF232327" />
+      <SolidColorBrush x:Key="SeparatorBrush" Color="#FF26262A" />
+      <SolidColorBrush x:Key="SeparatorStrongBrush" Color="#FF3A3A40" />
+      <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFF5F5F5" />
+      <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FF9C9CA1" />
+      <SolidColorBrush x:Key="TextTertiaryBrush" Color="#FF63636A" />
+      <SolidColorBrush x:Key="AccentBrush" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="AccentFillBrush" Color="#FFFFFFFF" />
+      <SolidColorBrush x:Key="AccentSoftBrush" Color="#FF1C1C20" />
+      <SolidColorBrush x:Key="OnAccentBrush" Color="#FF0D0D0E" />
+      <SolidColorBrush x:Key="RedBrush" Color="#FFFF6B6B" />
+      <SolidColorBrush x:Key="GreenBrush" Color="#FF58D68D" />
+      <SolidColorBrush x:Key="DimBrush" Color="#8C000000" />
+      <SolidColorBrush x:Key="ThumbBrush" Color="#FFF5F5F5" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

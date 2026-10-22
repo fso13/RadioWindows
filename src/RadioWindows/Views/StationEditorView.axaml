@@ -1,0 +1,118 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.StationEditorView"
+             x:DataType="vm:StationEditorViewModel">
+  <Border Classes="modalCard" Width="470">
+    <StackPanel Spacing="0">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Text="{Binding Title}" Classes="pageTitle" VerticalAlignment="Center" />
+        <Button Grid.Column="1" Classes="ghost" Command="{Binding CancelCommand}"
+                ToolTip.Tip="{loc:Tr Common.Close}" VerticalAlignment="Top">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </Grid>
+
+      <ScrollViewer MaxHeight="470" Margin="0,18,0,0" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="14">
+          <StackPanel>
+            <TextBlock Text="{loc:Tr Editor.Name}" Classes="fieldLabel" />
+            <Border Classes="field">
+              <TextBox Text="{Binding Name, Mode=TwoWay}" Watermark="{loc:Tr Editor.Name}" />
+            </Border>
+          </StackPanel>
+
+          <StackPanel>
+            <TextBlock Text="{loc:Tr Editor.Url}" Classes="fieldLabel" />
+            <Border Classes="field">
+              <TextBox Text="{Binding Url, Mode=TwoWay}"
+                       Watermark="{loc:Tr Editor.UrlHint}" />
+            </Border>
+          </StackPanel>
+
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="{loc:Tr Editor.Genre}" Classes="fieldLabel" />
+              <ComboBox ItemsSource="{Binding Genres}"
+                        SelectedItem="{Binding Genre, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch" />
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="{loc:Tr Editor.EqPreset}" Classes="fieldLabel" />
+              <ComboBox ItemsSource="{Binding EqOptions}"
+                        SelectedItem="{Binding SelectedEqOption, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:EqOptionViewModel">
+                    <TextBlock Text="{Binding Label}" Classes="callout" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+          </Grid>
+
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="{loc:Tr Editor.Group}" Classes="fieldLabel" />
+              <Border Classes="field">
+                <TextBox Text="{Binding Group, Mode=TwoWay}" />
+              </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="{loc:Tr Editor.Comment}" Classes="fieldLabel" />
+              <Border Classes="field">
+                <TextBox Text="{Binding Comment, Mode=TwoWay}" />
+              </Border>
+            </StackPanel>
+          </Grid>
+
+          <StackPanel>
+            <TextBlock Text="{loc:Tr Editor.Logo}" Classes="fieldLabel" />
+            <Border Classes="field">
+              <TextBox Text="{Binding LogoUrl, Mode=TwoWay}"
+                       Watermark="{loc:Tr Editor.LogoHint}" />
+            </Border>
+          </StackPanel>
+
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <StackPanel>
+              <TextBlock Text="{loc:Tr Editor.Loudness}" Classes="fieldLabel" />
+              <controls:Fader IsVertical="False" IsBipolar="True" Minimum="-12" Maximum="12"
+                              Height="24" ThumbSize="9"
+                              Value="{Binding VolumeOffsetDb, Mode=TwoWay}"
+                              TrackBrush="{DynamicResource SeparatorStrongBrush}"
+                              FillBrush="{DynamicResource TextSecondaryBrush}"
+                              ThumbBrush="{DynamicResource TextPrimaryBrush}" />
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="{Binding VolumeOffsetText}" Classes="mono"
+                       VerticalAlignment="Bottom" Margin="0,0,0,4" />
+          </Grid>
+
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+            <controls:ToggleSwitch IsChecked="{Binding Autoplay, Mode=TwoWay}"
+                                   VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Text="{loc:Tr Editor.Autoplay}" Classes="body" />
+              <TextBlock Text="{loc:Tr Editor.AutoplayHint}" Classes="caption" />
+            </StackPanel>
+          </Grid>
+
+          <TextBlock Text="{Binding Error}" Classes="caption"
+                     Foreground="{DynamicResource RedBrush}"
+                     IsVisible="{Binding HasError}" TextWrapping="Wrap" />
+        </StackPanel>
+      </ScrollViewer>
+
+      <Grid ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,18,0,0" ColumnSpacing="12">
+        <Button Grid.Column="0" Classes="destructive" Content="{loc:Tr Common.Delete}"
+                Command="{Binding DeleteCommand}" IsVisible="{Binding CanDelete}" />
+        <Button Grid.Column="2" Classes="secondary" Content="{loc:Tr Common.Cancel}"
+                Command="{Binding CancelCommand}" />
+        <Button Grid.Column="3" Classes="primary" Content="{Binding SaveLabel}"
+                Command="{Binding SaveCommand}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

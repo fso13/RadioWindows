@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.LastFmSetupView"
+             x:DataType="vm:LastFmSetupViewModel">
+  <Border Classes="modalCard" Width="460">
+    <StackPanel Spacing="14">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding Title}" Classes="pageTitle" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="ghost" Command="{Binding CloseCommand}">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </Grid>
+
+      <TextBlock Text="{Binding Explanation}" Classes="callout wrap"
+                 Foreground="{DynamicResource TextSecondaryBrush}" />
+
+      <Border Classes="rule" />
+
+      <Grid ColumnDefinitions="*,Auto" Classes="settingsRow">
+        <StackPanel Spacing="2">
+          <TextBlock Text="{Binding StatusText}" Classes="body" />
+          <TextBlock Text="{Binding UsernameLabel}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="secondary" Content="{Binding ConnectLabel}"
+                Command="{Binding ConnectCommand}"
+                IsVisible="{Binding IsConfigured}" />
+        <Button Grid.Column="1" Classes="secondary" Content="{Binding DisconnectLabel}"
+                Command="{Binding DisconnectCommand}" IsVisible="{Binding IsConnected}" />
+      </Grid>
+
+      <TextBlock Text="{Binding WaitingLabel}" Classes="caption"
+                 IsVisible="{Binding IsConnecting}" />
+      <TextBlock Text="{Binding Error}" Classes="caption" Foreground="{DynamicResource RedBrush}"
+                 IsVisible="{Binding HasError}" TextWrapping="Wrap" />
+
+      <Button Classes="primary" Content="{loc:Tr Common.Close}"
+              Command="{Binding CloseCommand}" HorizontalAlignment="Right" />
+    </StackPanel>
+  </Border>
+</UserControl>

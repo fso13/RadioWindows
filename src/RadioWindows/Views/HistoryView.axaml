@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.HistoryView"
+             x:DataType="vm:HistoryViewModel">
+  <Border Classes="modalCard" Width="560">
+    <StackPanel Spacing="12">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding Title}" Classes="pageTitle" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="ghost" Command="{Binding CloseCommand}">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </Grid>
+
+      <Border Classes="field" Height="30">
+        <TextBox Text="{Binding Search, Mode=TwoWay}" Watermark="{loc:Tr History.Search}" />
+      </Border>
+
+      <ScrollViewer MaxHeight="330" VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:HistoryItemViewModel">
+              <Grid ColumnDefinitions="*,Auto" Height="38" Margin="0,2">
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                  <TextBlock Text="{Binding Line}" Classes="headline" />
+                  <TextBlock Text="{Binding StationName}" Classes="caption" />
+                </StackPanel>
+                <TextBlock Grid.Column="1" Text="{Binding TimeText}" Classes="monoSmall"
+                           VerticalAlignment="Center" />
+                <Border Grid.ColumnSpan="2" Classes="rule" VerticalAlignment="Bottom" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <TextBlock Text="{Binding EmptyLabel}" Classes="callout"
+                 Foreground="{DynamicResource TextSecondaryBrush}" IsVisible="{Binding IsEmpty}" />
+
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="12">
+        <Button Classes="textButton" Command="{Binding CopyCommand}">
+          <TextBlock Text="{loc:Tr History.Copy}" Classes="captionMedium" />
+        </Button>
+        <Button Grid.Column="1" Classes="textButton" Command="{Binding ClearCommand}">
+          <TextBlock Text="{loc:Tr History.Clear}" Classes="captionMedium" />
+        </Button>
+        <Button Grid.Column="3" Classes="secondary" Content="{loc:Tr Common.Close}"
+                Command="{Binding CloseCommand}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

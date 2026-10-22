@@ -1,0 +1,24 @@
+# Build output
+bin/
+obj/
+dist/
+publish/
+artifacts/
+*.user
+*.suo
+.vs/
+.idea/
+
+# Test artifacts
+TestResults/
+*.trx
+*.coverage
+coverage*.xml
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Local secrets and settings
+*.local.json
+.env

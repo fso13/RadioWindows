@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version without the v prefix (e.g. 1.0.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $version = "${{ github.event.inputs.version }}"
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            $version = "${{ github.ref_name }}".TrimStart("v")
+          }
+          "value=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $version"
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Test
+        run: dotnet test tests/RadioWindows.Core.Tests/RadioWindows.Core.Tests.csproj -c Release
+
+      - name: Publish artifacts
+        shell: pwsh
+        run: ./scripts/publish.ps1 -Version ${{ steps.version.outputs.value }}
+
+      - name: Release notes
+        shell: pwsh
+        run: ./scripts/release_notes.ps1 -Version ${{ steps.version.outputs.value }} -OutFile release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', steps.version.outputs.value) }}
+          name: RadioWindows ${{ steps.version.outputs.value }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.value, '-') }}
+          files: |
+            dist/RadioWindows-Setup.exe
+            dist/RadioWindows-${{ steps.version.outputs.value }}-Setup.exe
+            dist/RadioWindows-Portable.zip
+            dist/SHA256SUMS.txt
+
+      - name: Summary
+        shell: pwsh
+        run: |
+          "### RadioWindows ${{ steps.version.outputs.value }}" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content dist/SHA256SUMS.txt >> $env:GITHUB_STEP_SUMMARY

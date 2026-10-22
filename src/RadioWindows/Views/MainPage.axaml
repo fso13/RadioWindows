@@ -1,0 +1,375 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.MainPage"
+             x:DataType="vm:MainPageViewModel">
+  <UserControl.Styles>
+    <Style Selector="Border.stationRow">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Border.stationRow:pointerover">
+      <Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+    </Style>
+    <Style Selector="Border.stationRow.selected">
+      <Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+    </Style>
+    <Style Selector="Border.navRow">
+      <Setter Property="Padding" Value="0,1" />
+    </Style>
+    <Style Selector="Border#SearchUnderline">
+      <Setter Property="Background" Value="{DynamicResource SeparatorBrush}" />
+    </Style>
+    <Style Selector="Border#SearchUnderline.focused">
+      <Setter Property="Background" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="46,*,68">
+    <!-- Header -->
+    <Grid Grid.Row="0" Name="HeaderArea" ColumnDefinitions="Auto,*,Auto" Background="Transparent">
+      <controls:BrandMark Grid.Column="0"
+                          Margin="20,0,0,0"
+                          FontSize="11.5"
+                          ShowsGlyph="True"
+                          VerticalAlignment="Center"
+                          Foreground="{DynamicResource TextPrimaryBrush}"
+                          BadgeBrush="{DynamicResource SurfaceBrush}" />
+
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="0,0,12,0"
+                  VerticalAlignment="Center">
+        <Button Classes="ghost" Name="MenuButton" ToolTip.Tip="{loc:Tr Common.Menu}"
+                AutomationProperties.Name="{loc:Tr Common.Menu}">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedRight">
+              <MenuItem Header="{loc:Tr Header.Settings}" Click="OnOpenSettings" />
+              <Separator />
+              <MenuItem Header="{loc:Tr Header.Hide}" Click="OnHide" />
+              <MenuItem Header="{loc:Tr Header.Quit}" Click="OnQuit" />
+            </MenuFlyout>
+          </Button.Flyout>
+          <controls:Icon Kind="Menu" Size="12" />
+        </Button>
+        <Button Classes="ghost" Name="CloseButton" ToolTip.Tip="{loc:Tr Header.Hide}"
+                AutomationProperties.Name="{loc:Tr Header.Hide}"
+                Command="{Binding CloseCommand}">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </StackPanel>
+
+      <Border Grid.ColumnSpan="3" Classes="rule" />
+    </Grid>
+
+    <!-- Body -->
+    <Grid Grid.Row="1" ColumnDefinitions="210,*" ColumnSpacing="32" Margin="24,20,24,8">
+      <!-- Sidebar -->
+      <Grid Grid.Column="0" RowDefinitions="*,Auto">
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+          <ScrollViewer.OpacityMask>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Offset="0" Color="#FF000000" />
+              <GradientStop Offset="0.92" Color="#FF000000" />
+              <GradientStop Offset="1" Color="#00000000" />
+            </LinearGradientBrush>
+          </ScrollViewer.OpacityMask>
+          <StackPanel Margin="0,0,8,0">
+            <ItemsControl ItemsSource="{Binding PrimaryItems}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:NavItemViewModel">
+                  <Button Classes="navItem" Command="{Binding Command}" Padding="0,1">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <TextBlock Text="{Binding Label}" Classes="nav"
+                                 Classes.navActive="{Binding IsSelected}" />
+                      <controls:EqualizerBars IsVisible="{Binding ShowsBars}"
+                                              IsActive="{Binding IsPlaying}"
+                                              Foreground="{DynamicResource TextPrimaryBrush}"
+                                              VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="{Binding GroupsLabel}" Classes="overline" Margin="0,12,0,3"
+                       IsVisible="{Binding HasGroups}" />
+            <ItemsControl ItemsSource="{Binding GroupItems}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:NavItemViewModel">
+                  <Button Classes="navItem" Command="{Binding Command}" Padding="0,1">
+                    <TextBlock Text="{Binding Label}" Classes="nav"
+                               Classes.navActive="{Binding IsSelected}" />
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="{Binding GenresLabel}" Classes="overline" Margin="0,12,0,3" />
+
+            <ItemsControl ItemsSource="{Binding GenreItems}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:NavItemViewModel">
+                  <Button Classes="navItem" Command="{Binding Command}" Padding="0,1">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <TextBlock Text="{Binding Label}" Classes="nav"
+                                 Classes.navActive="{Binding IsSelected}" />
+                      <controls:EqualizerBars IsVisible="{Binding ShowsBars}"
+                                              IsActive="{Binding IsPlaying}"
+                                              Foreground="{DynamicResource TextPrimaryBrush}"
+                                              VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Width="190" Height="190" Margin="0,16,0,0"
+                BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1"
+                ClipToBounds="True" Background="{DynamicResource SurfaceRaisedBrush}"
+                ToolTip.Tip="{Binding HeroTooltip}"
+                PointerPressed="OnHeroPressed">
+          <controls:RemoteImage SourceUrl="{Binding HeroArtworkUrl}"
+                                PlaceholderSize="36"
+                                PlaceholderBrush="{DynamicResource TextTertiaryBrush}" />
+        </Border>
+      </Grid>
+
+      <!-- Station list -->
+      <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*,Auto">
+        <StackPanel Grid.Row="0" Spacing="6">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:Icon Kind="Search" Size="11" VerticalAlignment="Center"
+                             Foreground="{DynamicResource TextTertiaryBrush}" />
+              <TextBox Name="SearchBox"
+                       Width="360"
+                       AutomationProperties.Name="{loc:Tr Search.Placeholder}"
+                       Watermark="{loc:Tr Search.Placeholder}"
+                       Text="{Binding SearchText, Mode=TwoWay}"
+                       GotFocus="OnSearchGotFocus"
+                       LostFocus="OnSearchLostFocus" />
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="{loc:Tr Search.Shortcut}" Classes="monoSmall"
+                       VerticalAlignment="Center" />
+          </Grid>
+          <Border Height="1" Name="SearchUnderline" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="10,20,*,82,24,90" ColumnSpacing="8"
+              Margin="0,12,0,4">
+          <TextBlock Grid.Column="2" Text="{loc:Tr Table.Station}" Classes="overline" />
+          <TextBlock Grid.Column="3" Text="{loc:Tr Table.Genre}" Classes="overline" />
+          <TextBlock Grid.Column="5" Text="{Binding VisibleCountText}"
+                     Classes="monoSmall" HorizontalAlignment="Right" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+          <ScrollViewer Name="StationScroll" VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer.OpacityMask>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Offset="0" Color="#FF000000" />
+                <GradientStop Offset="0.94" Color="#FF000000" />
+                <GradientStop Offset="1" Color="#00000000" />
+              </LinearGradientBrush>
+            </ScrollViewer.OpacityMask>
+            <StackPanel>
+            <ItemsControl Name="RowsHost" ItemsSource="{Binding Rows}" Focusable="False">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:StationRowViewModel">
+                  <Border Classes="stationRow"
+                          Classes.selected="{Binding IsSelected}"
+                          PointerPressed="OnRowPointerPressed"
+                          PointerMoved="OnRowPointerMoved"
+                          Tapped="OnRowTapped"
+                          DragDrop.AllowDrop="True"
+                          DragDrop.DragOver="OnRowDragOver"
+                          DragDrop.Drop="OnRowDrop"
+                          Background="Transparent">
+                    <Grid ColumnDefinitions="10,20,*,82,24,24" ColumnSpacing="8" Height="46">
+                      <controls:EqualizerBars Grid.Column="0"
+                                              IsVisible="{Binding ShowBars}"
+                                              IsActive="{Binding IsPlaying}"
+                                              Foreground="{DynamicResource TextPrimaryBrush}"
+                                              VerticalAlignment="Center" />
+                      <ProgressBar Grid.Column="0" IsVisible="{Binding ShowProgress}"
+                                   IsIndeterminate="True" Width="10" Height="2"
+                                   VerticalAlignment="Center" />
+                      <TextBlock Grid.Column="1" Text="{Binding Number}" Classes="caption"
+                                 VerticalAlignment="Center" TextAlignment="Right"
+                                 Margin="0,0,2,0" />
+                      <StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="{Binding Name}" Classes="headline" />
+                        <TextBlock Text="{Binding SecondaryLine}" Classes="caption" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="3" Text="{Binding Genre}" Classes="caption"
+                                 VerticalAlignment="Center" />
+                      <Button Grid.Column="4" Classes="ghost" Width="24" Height="24"
+                              Command="{Binding ToggleFavoriteCommand}"
+                              ToolTip.Tip="{Binding FavoriteTooltip}"
+                              AutomationProperties.Name="{Binding FavoriteTooltip}">
+                        <controls:Icon Kind="{Binding FavoriteIcon}" Size="11"
+                                       Classes.active="{Binding IsFavorite}" />
+                      </Button>
+                      <Button Grid.Column="5" Classes="ghost" Width="24" Height="24"
+                              Name="RowMenuButton" Tag="{Binding}"
+                              Click="OnRowMenuClick"
+                              ToolTip.Tip="{loc:Tr Row.Actions}"
+                              AutomationProperties.Name="{loc:Tr Row.Actions}">
+                        <controls:Icon Kind="Dots" Size="11" />
+                      </Button>
+                      <Border Grid.ColumnSpan="6" Classes="rule" VerticalAlignment="Bottom" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Border Height="26" Background="Transparent"
+                    DragDrop.AllowDrop="True"
+                    DragDrop.DragOver="OnEndDragOver" DragDrop.Drop="OnEndDrop" />
+            </StackPanel>
+          </ScrollViewer>
+
+          <StackPanel IsVisible="{Binding IsEmpty}" Spacing="12"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" Width="360">
+            <controls:Icon Kind="{Binding EmptyIcon}" Size="26"
+                           Foreground="{DynamicResource TextTertiaryBrush}"
+                           HorizontalAlignment="Center" />
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding EmptyTitle}" Classes="section" TextAlignment="Center" />
+              <TextBlock Text="{Binding EmptySubtitle}" Classes="callout"
+                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         TextAlignment="Center" TextWrapping="Wrap" />
+            </StackPanel>
+            <Button Classes="secondary" HorizontalAlignment="Center"
+                    Command="{Binding EmptyActionCommand}"
+                    Content="{Binding EmptyActionTitle}" />
+          </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+          <TextBlock Text="{loc:Tr Table.ReorderHint}" Classes="caption"
+                     VerticalAlignment="Center" IsVisible="{Binding CanReorder}" />
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16"
+                      VerticalAlignment="Center">
+            <Button Classes="textButton" Command="{Binding OpenTransferCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Download" Size="10" />
+                <TextBlock Text="{loc:Tr Table.ImportExport}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+            <Button Classes="textButton" Command="{Binding OpenBrowserCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:Icon Kind="Globe" Size="10" />
+                <TextBlock Text="{loc:Tr Table.Browser}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+            <Button Classes="primary" Command="{Binding AddStationCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:Icon Kind="Plus" Size="11" Foreground="{DynamicResource OnAccentBrush}" />
+                <TextBlock Text="{loc:Tr Table.AddStation}" Classes="captionMedium"
+                           Foreground="{DynamicResource OnAccentBrush}" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Grid>
+    </Grid>
+
+    <!-- Player bar -->
+    <Grid Grid.Row="2" RowDefinitions="1,68">
+      <Border Grid.Row="0" Classes="rule" VerticalAlignment="Top" />
+      <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*" Margin="20,0">
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2" MaxWidth="250">
+          <TextBlock Text="{Binding PlayerTitle}" Classes="headline" />
+          <TextBlock Text="{Binding PlayerSubtitle}" Classes="caption" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="18"
+                    VerticalAlignment="Center">
+          <Button Classes="ghost" Command="{Binding StopCommand}" IsEnabled="{Binding Player.IsActive}"
+                  ToolTip.Tip="{loc:Tr Player.Stop}" AutomationProperties.Name="{loc:Tr Player.Stop}">
+            <controls:Icon Kind="Stop" Size="9" />
+          </Button>
+          <Button Classes="ghost" Command="{Binding PreviousCommand}" IsEnabled="{Binding CanPrevious}"
+                  ToolTip.Tip="{loc:Tr Player.Previous}" AutomationProperties.Name="{loc:Tr Player.Previous}">
+            <controls:Icon Kind="Previous" Size="11" Classes.ink="True" />
+          </Button>
+          <Button Classes="playCircle" Command="{Binding TogglePlayPauseCommand}"
+                  IsEnabled="{Binding CanPlay}"
+                  AutomationProperties.Name="{loc:Tr Player.Play}"
+                  ToolTip.Tip="{loc:Tr Player.Play}">
+            <Panel>
+              <controls:Icon Kind="{Binding PlayPauseGlyph}" Size="11"
+                             Foreground="{DynamicResource OnAccentBrush}"
+                             IsVisible="{Binding !IsLoading}" />
+              <controls:Icon Kind="Refresh" Size="11"
+                             Foreground="{DynamicResource OnAccentBrush}"
+                             IsVisible="{Binding IsLoading}" />
+            </Panel>
+          </Button>
+          <Button Classes="ghost" Command="{Binding NextCommand}" IsEnabled="{Binding CanNext}"
+                  ToolTip.Tip="{loc:Tr Player.Next}" AutomationProperties.Name="{loc:Tr Player.Next}">
+            <controls:Icon Kind="Next" Size="11" Classes.ink="True" />
+          </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10"
+                    HorizontalAlignment="Right" VerticalAlignment="Center">
+          <Button Classes="textButton" Name="SleepButton" ToolTip.Tip="{Binding SleepTooltip}"
+                  AutomationProperties.Name="{Binding SleepTooltip}">
+            <Button.Flyout>
+              <MenuFlyout Placement="TopEdgeAlignedRight">
+                <MenuItem Header="15 минут" Command="{Binding SleepCommand}" CommandParameter="15" />
+                <MenuItem Header="30 минут" Command="{Binding SleepCommand}" CommandParameter="30" />
+                <MenuItem Header="60 минут" Command="{Binding SleepCommand}" CommandParameter="60" />
+                <MenuItem Header="90 минут" Command="{Binding SleepCommand}" CommandParameter="90" />
+                <Separator />
+                <MenuItem Header="{loc:Tr Player.SleepCancel}" Command="{Binding SleepCancelCommand}"
+                          IsEnabled="{Binding SleepActive}" />
+              </MenuFlyout>
+            </Button.Flyout>
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <controls:Icon Kind="Moon" Size="10" Classes.active="{Binding SleepActive}" />
+              <TextBlock Text="{Binding SleepText}" Classes="monoSmall"
+                         IsVisible="{Binding SleepActive}" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="ghost" Command="{Binding OpenEqualizerCommand}"
+                  ToolTip.Tip="{loc:Tr Player.Equalizer}"
+                  AutomationProperties.Name="{loc:Tr Player.Equalizer}">
+            <controls:Icon Kind="Sliders" Size="11" Classes.active="{Binding EqualizerEnabled}" />
+          </Button>
+
+          <controls:Icon Kind="Volume" Size="10"
+                         Foreground="{DynamicResource TextTertiaryBrush}" />
+          <controls:Fader IsVertical="False" IsBipolar="False" Minimum="0" Maximum="1"
+                          ThumbSize="7" Width="70" Height="14"
+                          Value="{Binding Volume, Mode=TwoWay}"
+                          TrackBrush="{DynamicResource SeparatorStrongBrush}"
+                          FillBrush="{DynamicResource TextSecondaryBrush}"
+                          ThumbBrush="{DynamicResource TextPrimaryBrush}" />
+
+          <Button Classes="ghost" Command="{Binding RetryCommand}" IsVisible="{Binding IsError}"
+                  ToolTip.Tip="{loc:Tr Player.Retry}"
+                  AutomationProperties.Name="{loc:Tr Player.Retry}">
+            <controls:Icon Kind="Refresh" Size="11" />
+          </Button>
+          <TextBlock Text="{loc:Tr Player.Reconnect}" Classes="monoSmall"
+                     IsVisible="{Binding IsReconnect}" VerticalAlignment="Center" />
+          <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center"
+                      IsVisible="{Binding IsLive}">
+            <Ellipse Width="4" Height="4" Fill="{DynamicResource RedBrush}" />
+            <TextBlock Text="{loc:Tr Player.Live}" Classes="monoSmall" />
+          </StackPanel>
+          <TextBlock Text="{loc:Tr Player.OffAir}" Classes="monoSmall"
+                     IsVisible="{Binding !IsLive}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

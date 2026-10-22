@@ -1,0 +1,92 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:RadioWindows.Controls"
+        xmlns:loc="using:RadioWindows.Localization"
+        xmlns:vm="using:RadioWindows.ViewModels"
+        xmlns:models="using:RadioWindows.Core.Models"
+        x:Class="RadioWindows.Views.MiniPlayerWindow"
+        x:DataType="vm:MiniPlayerViewModel"
+        Width="320"
+        Height="430"
+        CanResize="False"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        Topmost="True"
+        WindowStartupLocation="Manual">
+  <Border Margin="8" CornerRadius="10" Background="{DynamicResource SurfaceBrush}"
+          BorderBrush="{DynamicResource SeparatorStrongBrush}" BorderThickness="1"
+          BoxShadow="0 16 36 0 #40000000">
+    <StackPanel Margin="16" Spacing="14">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Text="{Binding NowLabel}" Classes="overline" />
+        <TextBlock Grid.Column="1" Text="{Binding StatusText}" Classes="monoSmall"
+                   Foreground="{DynamicResource TextTertiaryBrush}" />
+      </Grid>
+
+      <Border Height="150" ClipToBounds="True" BorderBrush="{DynamicResource SeparatorBrush}"
+              BorderThickness="1" Background="{DynamicResource SurfaceRaisedBrush}"
+              PointerPressed="OnArtworkPressed">
+        <controls:RemoteImage SourceUrl="{Binding ArtworkUrl}" PlaceholderSize="34" />
+      </Border>
+
+      <StackPanel Spacing="3">
+        <TextBlock Text="{Binding StationName}" Classes="body" FontWeight="Medium" />
+        <TextBlock Text="{Binding TrackLine}" Classes="caption" />
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <Button Classes="ghost" Command="{Binding TogglePlayPauseCommand}">
+          <Panel>
+            <controls:Icon Kind="{Binding PlayPauseGlyph}" Size="13" Classes.ink="True"
+                           IsVisible="{Binding !IsLoading}" />
+            <controls:Icon Kind="Refresh" Size="13" Classes.ink="True"
+                           IsVisible="{Binding IsLoading}" />
+          </Panel>
+        </Button>
+        <Button Classes="textButton" Command="{Binding StopCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="5">
+            <controls:Icon Kind="Stop" Size="9" />
+            <TextBlock Text="{Binding StopLabel}" Classes="captionMedium" />
+          </StackPanel>
+        </Button>
+        <ProgressBar IsIndeterminate="True" Width="60" Height="2" IsVisible="{Binding IsLoading}" />
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <controls:Icon Kind="Volume" Size="10" Foreground="{DynamicResource TextTertiaryBrush}" />
+        <controls:Fader IsVertical="False" IsBipolar="False" Minimum="0" Maximum="1"
+                        ThumbSize="7" Height="14" Width="240"
+                        Value="{Binding Volume, Mode=TwoWay}"
+                        TrackBrush="{DynamicResource SeparatorStrongBrush}"
+                        FillBrush="{DynamicResource TextSecondaryBrush}"
+                        ThumbBrush="{DynamicResource TextPrimaryBrush}" />
+      </StackPanel>
+
+      <StackPanel Spacing="4">
+        <TextBlock Text="{Binding QuickPickLabel}" Classes="fieldLabel" />
+        <ComboBox ItemsSource="{Binding QuickStations}"
+                  SelectedIndex="{Binding SelectedQuickIndex, Mode=TwoWay}"
+                  HorizontalAlignment="Stretch">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="models:RadioStation">
+              <TextBlock Text="{Binding Name}" Classes="callout" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </StackPanel>
+
+      <Grid ColumnDefinitions="*,Auto">
+        <Button Classes="textButton" Command="{Binding OpenWindowCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="5">
+            <TextBlock Text="{Binding OpenWindowLabel}" Classes="captionMedium" />
+            <controls:Icon Kind="ArrowRight" Size="10" />
+          </StackPanel>
+        </Button>
+        <TextBlock Grid.Column="1" Text="RadioWindows" Classes="caption"
+                   Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</Window>

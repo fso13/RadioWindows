@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.DiagnosticsView"
+             x:DataType="vm:DiagnosticsViewModel">
+  <Border Classes="modalCard" Width="620">
+    <StackPanel Spacing="12">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding Title}" Classes="pageTitle" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="ghost" Command="{Binding CloseCommand}">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </Grid>
+
+      <Border Classes="field" Height="30">
+        <TextBox Text="{Binding Search, Mode=TwoWay}" Watermark="{loc:Tr Common.Search}" />
+      </Border>
+
+      <Border BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1"
+              Background="{DynamicResource SurfaceRaisedBrush}" Height="320"
+              CornerRadius="2">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <ItemsControl ItemsSource="{Binding Lines}" Focusable="False">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="x:String">
+                <TextBlock Text="{Binding}" Classes="monoSmall" TextWrapping="NoWrap"
+                           Margin="8,2" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+
+      <TextBlock Text="{Binding EmptyLabel}" Classes="caption" IsVisible="{Binding IsEmpty}" />
+
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="12">
+        <Button Classes="textButton" Command="{Binding CopyCommand}">
+          <TextBlock Text="{loc:Tr Diagnostics.Copy}" Classes="captionMedium" />
+        </Button>
+        <Button Grid.Column="1" Classes="textButton" Command="{Binding RevealCommand}">
+          <TextBlock Text="{loc:Tr Diagnostics.Reveal}" Classes="captionMedium" />
+        </Button>
+        <Button Grid.Column="2" Classes="textButton" Command="{Binding ClearCommand}">
+          <TextBlock Text="{loc:Tr Diagnostics.Clear}" Classes="captionMedium" />
+        </Button>
+        <Button Grid.Column="3" Classes="secondary" Content="{loc:Tr Common.Close}"
+                Command="{Binding CloseCommand}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

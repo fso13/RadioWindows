@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:RadioWindows.Controls"
+             xmlns:loc="using:RadioWindows.Localization"
+             xmlns:vm="using:RadioWindows.ViewModels"
+             x:Class="RadioWindows.Views.TransferView"
+             x:DataType="vm:TransferViewModel">
+  <UserControl.Styles>
+    <Style Selector="Button.mode">
+      <Setter Property="Height" Value="28" />
+    </Style>
+    <Style Selector="Button.mode.selected /template/ Border#bg">
+      <Setter Property="Background" Value="{DynamicResource SurfaceActiveBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Border Classes="modalCard" Width="560" Name="Card">
+    <StackPanel Spacing="14">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding Title}" Classes="pageTitle" />
+          <TextBlock Text="{Binding Subtitle}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="ghost" Command="{Binding CloseCommand}">
+          <controls:Icon Kind="Close" Size="11" />
+        </Button>
+      </Grid>
+
+      <Border Classes="rule" />
+
+      <StackPanel Spacing="8">
+        <TextBlock Text="{Binding ImportLabel}" Classes="fieldLabel" />
+        <Border Background="{DynamicResource SurfaceRaisedBrush}"
+                BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1"
+                CornerRadius="3" Padding="14">
+          <StackPanel Spacing="10">
+            <TextBlock Text="{Binding DropHint}" Classes="callout wrap"
+                       Foreground="{DynamicResource TextSecondaryBrush}" />
+            <Button Classes="secondary" HorizontalAlignment="Left"
+                    Command="{Binding ChooseImportCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:Icon Kind="Folder" Size="11" Classes.ink="True" />
+                <TextBlock Text="{Binding ChooseLabel}" Classes="captionMedium" />
+              </StackPanel>
+            </Button>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Classes="mode secondary" Classes.selected="{Binding IsMergeMode}"
+                      Command="{Binding MergeModeCommand}">
+                <TextBlock Text="{Binding MergeLabel}" Classes="captionMedium"
+                           Classes.ink="{Binding IsMergeMode}" />
+              </Button>
+              <Button Classes="mode secondary" Classes.selected="{Binding ReplaceMode}"
+                      Command="{Binding ReplaceModeCommand}">
+                <TextBlock Text="{Binding ReplaceLabel}" Classes="captionMedium"
+                           Classes.ink="{Binding ReplaceMode}" />
+              </Button>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+
+      <Border Classes="rule" />
+
+      <StackPanel Spacing="8">
+        <TextBlock Text="{Binding ExportLabel}" Classes="fieldLabel" />
+        <Border Background="{DynamicResource SurfaceRaisedBrush}"
+                BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="1"
+                CornerRadius="3" Padding="14">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Classes="secondary" Command="{Binding ExportJsonCommand}"
+                    IsEnabled="{Binding CanExport}">
+              <TextBlock Text="{Binding ExportJsonLabel}" Classes="captionMedium" />
+            </Button>
+            <Button Classes="secondary" Command="{Binding ExportM3uCommand}"
+                    IsEnabled="{Binding CanExport}">
+              <TextBlock Text="{Binding ExportM3uLabel}" Classes="captionMedium" />
+            </Button>
+            <Button Classes="secondary" Command="{Binding ExportOpmlCommand}"
+                    IsEnabled="{Binding CanExport}">
+              <TextBlock Text="{Binding ExportOpmlLabel}" Classes="captionMedium" />
+            </Button>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+
+      <TextBlock Text="{Binding Status}" Classes="caption wrap"
+                 Foreground="{DynamicResource TextSecondaryBrush}"
+                 IsVisible="{Binding HasStatus}" />
+
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Text="{Binding Status}" Classes="caption" IsVisible="{Binding HasStatus}" />
+        <Button Grid.Column="1" Classes="primary" Content="{loc:Tr Common.Close}"
+                Command="{Binding CloseCommand}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

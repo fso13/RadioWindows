@@ -1,0 +1,23 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <AvaloniaVersion>11.3.22</AvaloniaVersion>
+    <LibVlcSharpVersion>3.10.2</LibVlcSharpVersion>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>fso13</Company>
+    <Product>RadioWindows</Product>
+    <Description>Интернет-радио для Windows: трей, поток, эквалайзер.</Description>
+    <Copyright>© 2026 fso13</Copyright>
+    <RepositoryUrl>https://github.com/fso13/RadioWindows</RepositoryUrl>
+    <!-- Tmds.DBus.Protocol comes from Avalonia's Linux backend; the Linux
+         backend is never used by this Windows app, so the advisory is not
+         reachable. Replace the pin when Avalonia updates the dependency. -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+</Project>
