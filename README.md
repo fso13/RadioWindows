@@ -162,6 +162,27 @@ scripts/publish.ps1 -SkipInstaller     # только портативный а�
 libVLC, собирает установщик Inno Setup 6 и считает SHA-256. Без установленного Inno Setup
 остаётся только `dist\RadioWindows-Portable.zip`.
 
+### Ключи Last.fm
+
+Скробблинг работает, только если при сборке встроены ключи API (или заданы переменные
+окружения при запуске — удобно для разработки):
+
+```powershell
+# встроить в сборку
+scripts/publish.ps1 -Version 1.0.0 `
+    -LastFmApiKey "0123456789abcdef..." `
+    -LastFmApiSecret "fedcba9876543210..."
+
+# или подставить при запуске из исходников
+$env:RADIO_LASTFM_API_KEY="..."
+$env:RADIO_LASTFM_API_SECRET="..."
+dotnet run --project src/RadioWindows -- --show
+```
+
+В GitHub Actions ключи берутся из секретов `LASTFM_API_KEY` и `LASTFM_API_SECRET`
+(workflow `release.yml`). Без ключей раздел Last.fm честно пишет, что они не заданы,
+и остальные функции работают как обычно.
+
 ## Релиз
 
 1. Добавьте секцию в `CHANGELOG.md`: `## [1.0.0] — 2026-10-22`.

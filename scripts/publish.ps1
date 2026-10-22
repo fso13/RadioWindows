@@ -7,6 +7,8 @@
 #>
 param(
     [string]$Version = "",
+    [string]$LastFmApiKey = $env:RADIO_LASTFM_API_KEY,
+    [string]$LastFmApiSecret = $env:RADIO_LASTFM_API_SECRET,
     [switch]$SkipInstaller
 )
 
@@ -27,6 +29,7 @@ try {
     dotnet publish "src/RadioWindows/RadioWindows.csproj" `
         -c Release -r win-x64 --self-contained true `
         -p:Version=$Version -p:FileVersion="$Version.0" -p:AssemblyVersion="$Version.0" `
+        -p:LastFmApiKey="$LastFmApiKey" -p:LastFmApiSecret="$LastFmApiSecret" `
         -p:PublishSingleFile=false -p:PublishTrimmed=false -p:PublishReadyToRun=true `
         -o $publish
     if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed" }

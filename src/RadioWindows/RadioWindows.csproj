@@ -26,6 +26,11 @@
     <ProjectReference Include="..\RadioWindows.Core\RadioWindows.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(LastFmApiKey)' != ''">
+    <AssemblyMetadata Include="LastFmApiKey" Value="$(LastFmApiKey)" />
+    <AssemblyMetadata Include="LastFmApiSecret" Value="$(LastFmApiSecret)" />
+  </ItemGroup>
+
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Update="Assets\app.ico" CopyToOutputDirectory="PreserveNewest" />

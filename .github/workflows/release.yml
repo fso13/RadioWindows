@@ -42,6 +42,9 @@ jobs:
 
       - name: Publish artifacts
         shell: pwsh
+        env:
+          RADIO_LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          RADIO_LASTFM_API_SECRET: ${{ secrets.LASTFM_API_SECRET }}
         run: ./scripts/publish.ps1 -Version ${{ steps.version.outputs.value }}
 
       - name: Release notes
