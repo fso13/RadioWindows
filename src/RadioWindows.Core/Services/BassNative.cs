@@ -156,10 +156,12 @@ internal static class BassNative
     [DllImport("bass_fx", EntryPoint = "BASS_FX_GetVersion")]
     public static extern uint FxGetVersion();
 
-    [DllImport("bass_fx", EntryPoint = "BASS_FXSetParameters")]
+    // BASS_FXSetParameters/BASS_FXGetParameters live in bass.dll itself; loading
+    // bass_fx.dll only registers the extra effect types it provides.
+    [DllImport("bass", EntryPoint = "BASS_FXSetParameters")]
     public static extern bool FxSetParameters(int handle, ref PeakEqParameters parameters);
 
-    [DllImport("bass_fx", EntryPoint = "BASS_FXGetParameters")]
+    [DllImport("bass", EntryPoint = "BASS_FXGetParameters")]
     public static extern bool FxGetParameters(int handle, ref PeakEqParameters parameters);
 
     public static int StreamCreateUrl(string url, uint flags, DownloadProc? proc, IntPtr user) =>
