@@ -131,7 +131,15 @@ public sealed class MiniPlayerViewModel : ObservableObject, IDisposable
     private void RebuildQuickStations()
     {
         QuickStations.Clear();
-        foreach (var station in _services.Library.Stations.Take(25))
+        var current = _services.Library.ById(_services.Player.Station?.Id ?? string.Empty);
+        if (current is not null)
+        {
+            QuickStations.Add(current);
+        }
+
+        foreach (var station in _services.Library.Stations
+                     .Where(station => station.Id != current?.Id)
+                     .Take(24))
         {
             QuickStations.Add(station);
         }
