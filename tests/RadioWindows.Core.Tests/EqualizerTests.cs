@@ -10,7 +10,7 @@ public sealed class EqualizerTests
     public void There_are_ten_bands_and_frequencies()
     {
         Assert.Equal(10, EqualizerCatalog.BandCount);
-        Assert.Equal(new[] { 32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000 }, EqualizerCatalog.Frequencies);
+        Assert.Equal(new[] { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 }, EqualizerCatalog.Frequencies);
     }
 
     [Fact]
@@ -33,7 +33,8 @@ public sealed class EqualizerTests
     [Fact]
     public void Frequency_labels_match_the_mac_app()
     {
-        Assert.Equal("32", EqualizerCatalog.LabelKeyForFrequency(32));
+        Assert.Equal("60", EqualizerCatalog.LabelKeyForFrequency(60));
+        Assert.Equal("3k", EqualizerCatalog.LabelKeyForFrequency(3000));
         Assert.Equal("1k", EqualizerCatalog.LabelKeyForFrequency(1000));
         Assert.Equal("16k", EqualizerCatalog.LabelKeyForFrequency(16000));
     }
