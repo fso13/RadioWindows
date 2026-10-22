@@ -6,7 +6,7 @@ namespace RadioWindows.Core.Services;
 
 /// <summary>
 /// Side-channel ICY reader: opens the stream with <c>Icy-MetaData: 1</c> and
-/// emits <c>StreamTitle</c> updates. libVLC plays the audio, this reader only
+/// emits <c>StreamTitle</c> updates. BASS plays the audio, this reader only
 /// watches the metadata blocks, exactly like the macOS app.
 /// </summary>
 public sealed class IcyMetadataReader : IIcyMetadataReader

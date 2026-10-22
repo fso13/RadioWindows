@@ -41,7 +41,7 @@ public sealed class EqualizerService : ObservableObject, IDisposable
 
     public EqualizerPreset Preset => EqualizerCatalog.ById(_presetId);
 
-    /// <summary>libVLC provides a native 10-band equalizer on every codec.</summary>
+    /// <summary>BASS_FX provides a native 10-band equalizer on every codec.</summary>
     public bool IsSupported => true;
 
     public bool IsCustom => _presetId == EqualizerCatalog.CustomId;

@@ -29,7 +29,8 @@
 - `dotnet list package --vulnerable --include-transitive` в CI (`security.yml`);
 - CodeQL для C# (`codeql.yml`);
 - Dependency Review для pull request'ов;
-- libVLC обновляется вместе с пакетом `VideoLAN.LibVLC.Windows`.
+- BASS и add-on'ы обновляются вручную из [un4seen.com](https://www.un4seen.com/) (файлы лежат
+  в `src/RadioWindows/Native/`, версии и лицензии — в `Native/licenses/`).
 
 ## Ограничения
 

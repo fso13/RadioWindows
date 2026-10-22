@@ -4,7 +4,7 @@ namespace RadioWindows.Core.Services;
 
 /// <summary>
 /// Silent engine used in tests, on non-Windows developer machines and whenever
-/// libVLC cannot start. Playback state changes are simulated so the UI can be
+/// BASS cannot start. Playback state changes are simulated so the UI can be
 /// exercised end to end.
 /// </summary>
 public sealed class NullAudioEngine : IAudioEngine
@@ -14,6 +14,10 @@ public sealed class NullAudioEngine : IAudioEngine
     public string Name => "Null";
 
     public event Action<PlaybackState>? StateChanged;
+
+    public event Action<string>? MetadataChanged;
+
+    public bool ProvidesMetadata => false;
 
     /// <summary>When set, the next <see cref="Play"/> reports an error.</summary>
     public bool FailOnPlay { get; set; }
@@ -79,5 +83,6 @@ public sealed class NullAudioEngine : IAudioEngine
         _pending?.Cancel();
         _pending?.Dispose();
         _pending = null;
+        _ = MetadataChanged;
     }
 }

@@ -9,7 +9,7 @@ public sealed record StreamInfo(
     int BufferMilliseconds,
     string? Server = null)
 {
-    /// <summary>Human-readable codec name for libVLC four-character codes.</summary>
+    /// <summary>Human-readable codec name from a legacy four-character code.</summary>
     public static string CodecNameFromFourCc(uint fourCc)
     {
         var text = string.Join(
@@ -31,9 +31,15 @@ public sealed record StreamInfo(
             return "—";
         }
 
-        if (value.Contains("mpeg") && value.Contains("layer 3") || value.Contains("mp3"))
+        if (value.Contains("mpeg") && value.Contains("layer 3") || value.Contains("mp3")
+            || value is "audio/mpeg" or "audio/mp3" or "audio/mpeg3")
         {
             return "MP3";
+        }
+
+        if (value.Contains("mpegurl"))
+        {
+            return "HLS";
         }
 
         if (value.Contains("aac") || value.Contains("mp4a"))

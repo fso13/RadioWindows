@@ -38,10 +38,6 @@ try {
         -o $publish
     if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed" }
 
-    # The package ships both architectures; a win-x64 build never loads the x86 copy.
-    $legacyVlc = Join-Path $publish "libvlc/win-x86"
-    if (Test-Path $legacyVlc) { Remove-Item $legacyVlc -Recurse -Force }
-
     $zip = Join-Path $dist "RadioWindows-Portable.zip"
     Remove-Item $zip -Force -ErrorAction SilentlyContinue
     Compress-Archive -Path (Join-Path $publish "*") -DestinationPath $zip -CompressionLevel Optimal

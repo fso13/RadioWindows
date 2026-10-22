@@ -13,12 +13,18 @@ public enum PlaybackState
     Error,
 }
 
-/// <summary>Audio backend (libVLC on Windows, a silent engine in tests).</summary>
+/// <summary>Audio backend (BASS on Windows, a silent engine in tests).</summary>
 public interface IAudioEngine : IDisposable
 {
     string Name { get; }
 
     event Action<PlaybackState>? StateChanged;
+
+    /// <summary>Raised when the engine reads a new ICY title itself.</summary>
+    event Action<string>? MetadataChanged;
+
+    /// <summary>True when <see cref="MetadataChanged"/> is fed by the engine, so no side-channel is needed.</summary>
+    bool ProvidesMetadata { get; }
 
     void Play(Uri url, double volume);
 

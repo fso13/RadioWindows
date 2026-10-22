@@ -1,8 +1,7 @@
 namespace RadioWindows.Core.Models;
 
-/// <summary>A 10-band equalizer preset. Gains are in dB, ordered low → high,
-/// following the fixed band centres of the libVLC equalizer:
-/// 60, 170, 310, 600, 1k, 3k, 6k, 12k, 14k, 16k Hz.</summary>
+/// <summary>A 10-band equalizer preset. Gains are in dB, ordered low → high:
+/// 32, 64, 125, 250, 500, 1k, 2k, 4k, 8k, 16k Hz.</summary>
 public sealed record EqualizerPreset(string Id, string LabelKey, IReadOnlyList<double> Gains);
 
 public static class EqualizerCatalog
@@ -11,7 +10,7 @@ public static class EqualizerCatalog
     public const double MinGain = -12;
     public const double MaxGain = 12;
 
-    public static readonly IReadOnlyList<int> Frequencies = [60, 170, 310, 600, 1_000, 3_000, 6_000, 12_000, 14_000, 16_000];
+    public static readonly IReadOnlyList<int> Frequencies = [32, 64, 125, 250, 500, 1_000, 2_000, 4_000, 8_000, 16_000];
 
     public const string CustomId = "custom";
     public const string FlatId = "flat";

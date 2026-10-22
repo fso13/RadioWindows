@@ -59,6 +59,15 @@ public sealed class RadioPlayerService : ObservableObject, IPlaybackFade, IPlayb
             _engine.SetEqualizer(_equalizer.Enabled, _equalizer.Gains);
         };
         _engine.SetEqualizer(_equalizer.Enabled, _equalizer.Gains);
+        _engine.MetadataChanged += title => _dispatcher.Post(() =>
+        {
+            if (_station is null)
+            {
+                return;
+            }
+
+            ApplyNowPlaying(NowPlayingParser.Parse(title, _station.Name), fromIcy: true);
+        });
         _icy.TitleChanged += title => _dispatcher.Post(() =>
         {
             if (_icyStationId is null || _icyStationId != _station?.Id)
@@ -492,7 +501,7 @@ public sealed class RadioPlayerService : ObservableObject, IPlaybackFade, IPlayb
         }
 
         var generation = _generation;
-        var allowIcy = !_icyLive;
+        var allowIcy = !_icyLive && !_engine.ProvidesMetadata;
         _ = Task.Run(async () =>
         {
             var track = await _lookup
@@ -513,7 +522,7 @@ public sealed class RadioPlayerService : ObservableObject, IPlaybackFade, IPlayb
     private void StartIcy(RadioStation station)
     {
         StopIcy();
-        if (station.StreamUri is null)
+        if (station.StreamUri is null || _engine.ProvidesMetadata)
         {
             return;
         }

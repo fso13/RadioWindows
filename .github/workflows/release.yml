@@ -40,6 +40,14 @@ jobs:
       - name: Test
         run: dotnet test tests/RadioWindows.Core.Tests/RadioWindows.Core.Tests.csproj -c Release
 
+      - name: BASS audio smoke test
+        shell: pwsh
+        run: |
+          dotnet run --project tools/AudioProbe/AudioProbe.csproj -c Release -- "https://ice1.somafm.com/groovesalad-128-mp3" 8 eq --nosound
+          if ($LASTEXITCODE -ne 0) { throw "MP3 playback or BASS_FX equalizer failed" }
+          dotnet run --project tools/AudioProbe/AudioProbe.csproj -c Release -- "https://rusradio.hostingradio.ru/rusradio96.aacp" 8 --nosound
+          if ($LASTEXITCODE -ne 0) { throw "AAC playback failed" }
+
       - name: Publish artifacts
         shell: pwsh
         env:

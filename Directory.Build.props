@@ -5,10 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
     <AvaloniaVersion>11.3.22</AvaloniaVersion>
-    <LibVlcSharpVersion>3.10.2</LibVlcSharpVersion>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
     <Company>fso13</Company>
     <Product>RadioWindows</Product>
     <Description>Интернет-радио для Windows: трей, поток, эквалайзер.</Description>
